@@ -4,7 +4,6 @@ const sha = require('sha256');
 // Blockchain Constructor Function
 // Chains - Chain Data
 // Pending Transactions - Transactions made since last Block is pushed into the chain
-
 function Blockchain() {
     this.chains = [];
     this.pendingTransactions = [];
@@ -12,6 +11,7 @@ function Blockchain() {
     // Genesios Block
     this.createNewBlock(1, '0', '0');    
 }
+
 
 // Creating New Blocks to be pushed into the chain
 Blockchain.prototype.createNewBlock = function(nonce, prevHash, hash) {
@@ -30,10 +30,12 @@ Blockchain.prototype.createNewBlock = function(nonce, prevHash, hash) {
     return newBlock;
 }
 
+
 // Retrieving Last Block
 Blockchain.prototype.getLastBlock = function() {
     return this.chains[this.chains.length - 1];
 }
+
 
 // Creating New Transactions 
 Blockchain.prototype.newTransaction = function(sender, receiver, amount) {
@@ -45,8 +47,9 @@ Blockchain.prototype.newTransaction = function(sender, receiver, amount) {
 
     this.pendingTransactions.push(transaction);
 
-    return this.getLastBlock()['index'] + 1;
+    return this.getLastBlock().index + 1;
 }
+
 
 // Hash Block
 Blockchain.prototype.hashBlock = function(nonce, prevHash, currentBlock) {
@@ -54,6 +57,7 @@ Blockchain.prototype.hashBlock = function(nonce, prevHash, currentBlock) {
     const hash = sha(dataStr);
     return hash;
 }
+
 
 // Proof Of Work
 Blockchain.prototype.proofOfWork = function(prevHash, currentBlock) {
@@ -67,5 +71,6 @@ Blockchain.prototype.proofOfWork = function(prevHash, currentBlock) {
 
     return nonce;
 }
+
 
 module.exports = Blockchain ;
