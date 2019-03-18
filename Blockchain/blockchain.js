@@ -1,4 +1,5 @@
 const sha = require('sha256');
+const URL = `http://localhost:${process.argv[2]}`;
 
 
 // Blockchain Constructor Function
@@ -7,6 +8,9 @@ const sha = require('sha256');
 function Blockchain() {
     this.chains = [];
     this.pendingTransactions = [];
+
+    this. currentNodeURL = URL;
+    this.networkNodes = [];
 
     // Genesios Block
     this.createNewBlock(1, '0', '0');    

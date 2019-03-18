@@ -4,14 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --watch server/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "node1": "nodemon --watch server -e js server/nodes.js 3001",
+    "node2": "nodemon --watch server -e js server/nodes.js 3002",
+    "node3": "nodemon --watch server -e js server/nodes.js 3003",
+    "node4": "nodemon --watch server -e js server/nodes.js 3004",
+    "node5": "nodemon --watch server -e js server/nodes.js 3005"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "sha256": "^0.2.0",
     "uuid": "^3.3.2"
   }
