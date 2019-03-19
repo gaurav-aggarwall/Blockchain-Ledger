@@ -29,9 +29,30 @@ app.get('/blockchain', (req, res) => {
 });
 
 
+// Transaction and Broadcast Route
+app.post('/transaction-broadcast', (req, res) => {
+    const transaction = bitcoin.newTransaction(req.body.sender, req.body.receiver, req.body.amount);
+    bitcoin.addTransaction(transaction);
+    
+    bitcoin.networkNodes.forEach(node => {
+        requestoptions = {
+            uri: node + '/transaction',
+            method: 'POST',
+            body: { transaction },
+            json: true
+        };
+        
+        request(requestoptions).then(data => console.log(data));
+    });
+    res.json({ note: `Transaction added and broadcasted successfully` });
+});
+
+
 // Transaction Route
 app.post('/transaction', (req, res) => {
-    const blockIndex = bitcoin.newTransaction(req.body.sender, req.body.receiver, req.body.amount);
+    const newTransaction = req.body.transaction;
+    const blockIndex = bitcoin.addTransaction(newTransaction);
+
     res.json({ note: `Transaction will be added to ${blockIndex} block.` });
 });
 
@@ -78,7 +99,7 @@ app.post('/register-broadcast', (req, res) => {
             method: 'POST',
             body: { newNodeURL },
             json: true
-        };
+        }; 
     
         request(requestToConnectedNodeOptions);
 
