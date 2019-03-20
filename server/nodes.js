@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //Home Route
 app.get('/', (req, res) => {
-    res.send('HELLO');
+    res.json({ note: 'HELLO' });
 });
 
 
@@ -154,7 +154,7 @@ app.post('/register-broadcast', (req, res) => {
         request(requestToNewNodeOptions);
     }); 
 
-    res.send('DONE');
+    res.json({ note: 'DONE' });
 });
 
 
@@ -168,6 +168,48 @@ app.post('/register', (req, res) => {
     }else{
         return res.json(`Node ${newNodeURL} Already Present`);
     }    
+});
+
+
+// Consensus Route
+app.get('/consensus', (req, res) => {
+    Promise.all(bitcoin.networkNodes.map(newNodeURL => {
+        const reqOptions = {
+            uri: newNodeURL + '/blockchain',
+            method: 'GET',
+            json: true
+        }
+
+        return request(reqOptions)
+    })) 
+    .then(blockchains => {
+        const currentLength = bitcoin.chains.length;
+        let maxLength = currentLength;
+        let newLongChain = null;
+        let newPendingTransactions = null;
+
+        blockchains.forEach(blockchain => {
+            if(blockchain.chains.length > maxLength){
+                maxLength = blockchain.chains.length;
+                newLongChain = blockchain.chains;   
+                newPendingTransactions = blockchain.pendingTransactions; 
+            }
+        });
+
+        if(!newLongChain || newLongChain && !bitcoin.isChainValid(newLongChain)){
+            res.json({
+                note: 'Current Chain has not been replaced',
+                chains: bitcoin.chains
+            });
+        } else if(newLongChain && bitcoin.isChainValid(newLongChain)){
+            bitcoin.chains = newLongChain;
+            bitcoin.pendingTransactions = newPendingTransactions;
+            res.json({
+                note: 'Current Chain has been replaced',
+                chains: bitcoin.chains
+            });
+        }
+    })
 });
 
 
