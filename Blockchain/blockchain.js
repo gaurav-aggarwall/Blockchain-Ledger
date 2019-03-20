@@ -79,6 +79,28 @@ class Blockchain {
         }
         return nonce;
     }
+
+
+    // Is Chain Valid
+    isChainValid(blockchain){
+        let isValid = true;
+
+        const genesisBlock = blockchain[0];
+        if(!(genesisBlock.nonce === 1) || !(genesisBlock.prevHash === '0') || !(genesisBlock.hash === '0')){
+            isValid = false;
+        }
+
+
+        for(let i = 1; i < blockchain.length; i++){
+            const currentBlock = blockchain[i];
+            const prevBlock = blockchain[i-1];
+            const blockHash = this.hashBlock(currentBlock.nonce, prevBlock.hash, { index: currentBlock.index, transactions: currentBlock.transactions});
+            if(blockHash.substr(0,4) !== '0000') isValid = false;
+            if(prevBlock.hash !== currentBlock.prevHash) isValid = false;
+        }
+
+        return isValid;
+    }
 }
 
 

@@ -63,7 +63,7 @@ app.get('/mine', (req, res) => {
     const prevHash = prevBlock.hash;
     const currentBlock = {
         index: prevBlock.index + 1,
-        transactilasons: bitcoin.pendingTransactions
+        transactions: bitcoin.pendingTransactions
     }
 
     const nonce = bitcoin.proofOfWork(prevHash, currentBlock);
