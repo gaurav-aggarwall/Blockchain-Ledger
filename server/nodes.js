@@ -1,4 +1,5 @@
-const experss = require('express');
+const express = require('express');
+const path = require("path");
 const bodyParser = require('body-parser');
 const uuid = require('uuid/v1');
 const request = require('request-promise');
@@ -11,16 +12,12 @@ const bitcoin = new Blockchain();
 
 const nodeID = uuid().split('-').join('');
 
-const app = experss();
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-
-//Home Route
-app.get('/', (req, res) => {
-    res.json({ note: 'HELLO' });
-});
+app.use(express.static(path.join(__dirname, '../', 'public')));
 
 
 // Blockchain Route
@@ -258,8 +255,10 @@ app.get('/address/:address', (req, res) => {
     
     res.json({
         note: 'Transaction Found',
-        transactions: addressTransactionOBJ.transactions,
-        balance: addressTransactionOBJ.balance
+        addressData: {
+            transactions: addressTransactionOBJ.transactions,
+            balance: addressTransactionOBJ.balance
+        }
     });
 });
 

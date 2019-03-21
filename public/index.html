@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Block Chain Explorer</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
+	</script>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body ng-app="BlockExplorer">
+	<div class="container" ng-controller="MainController">
+		<div class="row">
+			<div class="col-md-8 offset-md-2">
+				<h1 id="page-title">Block Chain Explorer</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 offset-md-3">
+				<form ng-submit="search(searchValue)">
+					<div class="form-group">
+						<input type="text" class="form-control" ng-model="searchValue" placeholder="Value">
+					</div>
+					<div class="form-group">
+						<select class="form-control" ng-model="searchType">
+							<option value="" disabled selected>Select your option</option>
+							<option value="block">Block Hash</option>
+							<option value="transaction">Transaction ID</option>
+							<option value="address">Address</option>
+						</select>
+					</div>
+					<button type="submit" class="btn btn-primary margin-auto btn-search">
+						Searchs
+					</button>
+					<p ng-if="!block && !transaction && !addressData && initialSearchMade" class="no-data-text">
+						No data found for search.
+					</p>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-10 offset-md-1">
+
+				<!-- 'display block' table -->
+				<h3 class="table-title" ng-if="block">Block</h3>
+				<table class="table table-striped" ng-if="block">
+					<tbody>
+						<tr>
+							<td class="bold">Block Hash</td>
+							<td>{{ block.hash }}</td>
+						</tr>
+						<tr>
+							<td class="bold">Index</td>
+							<td>{{ block.index }}</td>
+						</tr>
+						<tr>
+							<td class="bold">Time Stamp</td>
+							<td>{{ block.timestamp }}</td>
+						</tr>
+						<tr>
+							<td class="bold">Nonce</td>
+							<td>{{ block.nonce }}</td>
+						</tr>
+						<tr>
+							<td class="bold">Previous Hash</td>
+							<td>{{ block.prevHash }}</td>
+						</tr>
+						<tr>
+							<td class="bold">Number Transactions</td>
+							<td>{{ block.transactions.length }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<!-- end 'display block' table -->
+
+				<!-- 'display transaction' table -->
+				<h3 class="table-title" ng-if="transaction">Transaction</h3>
+				<table class="table table-striped" ng-if="transaction">
+					<tbody>
+						<tr>
+							<td class="bold">Sender</td>
+							<td>{{ transaction.sender }}</td>
+						</tr>
+						<tr>
+							<td class="bold">Recipient</td>
+							<td>{{ transaction.receiver }}</td>
+						</tr>
+						<tr>
+							<td class="bold">Amount</td>
+							<td>{{ transaction.amount }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<!-- end 'display transaction' table -->
+
+				<!-- 'display address' table -->
+				<h3 class="table-title" ng-if="addressData">Address</h3>
+				<p id="balance-text" ng-if="addressData">(Balance: {{ addressData.balance }})</p>
+				<table class="table table-striped" ng-if="addressData">
+					<thead>
+						<tr>
+							<th scope="col">Sender</th>
+							<th scope="col">Receiver</th>
+							<th scope="col">Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="transaction in addressData.transactions">
+							<td>{{ transaction.sender }}</td>
+							<td>{{ transaction.receiver }}</td>
+							<td>{{ transaction.amount }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<!-- end 'display address' table -->
+
+			</div>
+		</div>
+	</div>
+
+	<script src="index.js"></script>
+</body>
+
+</html>
