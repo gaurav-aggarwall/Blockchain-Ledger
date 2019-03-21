@@ -213,6 +213,56 @@ app.get('/consensus', (req, res) => {
 });
 
 
+// Block Route 
+app.get('/block/:blockhash', (req, res) => {
+    const blockhash = req.params.blockhash;
+    const correctBlock = bitcoin.getBlock(blockhash);
+    if(correctBlock){
+        res.json({
+            note: 'Correct Block found',
+            block: correctBlock
+        });
+    } else {
+        res.json({
+            note: 'No Block Found',
+            block: correctBlock
+        });
+    }    
+});
+
+
+// Transaction ID Route 
+app.get('/transaction/:id', (req, res) => {
+    const id = req.params.id;
+    const correctTransactionOBJ = bitcoin.getTransaction(id);
+    if(correctTransactionOBJ.transaction){
+        res.json({
+            note: 'Correct transaction found',
+            transaction: correctTransactionOBJ.transaction,
+            block: correctTransactionOBJ.block
+        });
+    } else {
+        res.json({
+            note: 'No transaction Found',
+            transaction: correctTransactionOBJ.transaction,
+            block: correctTransactionOBJ.block
+        });
+    } 
+});
+
+
+// Address Route 
+app.get('/address/:address', (req, res) => {
+    const address = req.params.address;
+    const addressTransactionOBJ = bitcoin.getAddress(address);
+    
+    res.json({
+        note: 'Transaction Found',
+        transactions: addressTransactionOBJ.transactions,
+        balance: addressTransactionOBJ.balance
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Server stared on port ${PORT}`);
 })
